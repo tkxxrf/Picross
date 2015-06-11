@@ -69,7 +69,12 @@ void printBoard(Board b){
 		}
 		std::cout << std::setw(max2+max3-1) << std::right << temp;
 		for (int j=0; j<b.sizeTop; j++){
-			std::cout << "| " << b.board[i][j] << ' ';
+			if (b.board[i][j] == 2) {
+				std::cout << "| X ";
+			}
+			else{
+				std::cout << "| " << b.board[i][j] << ' ';
+			}
 		}
 		std::cout << '|' << std::endl;
 	}
@@ -125,5 +130,24 @@ int main(){
 	//std::cout << clue1.size() << " " << clue2.size() << std::endl;
 	Board b(board,clue1,clue2);
 	printBoard(b);
+	while (true){
+		std::string input = "";
+		std::cout << "Enter x, then y, then value (0, 1, or 2)" << std::endl;
+		int numX = 0;
+		std::getline(std::cin,input);
+		std::stringstream stream1(input);
+		stream1 >> numX;
+		int numY = 0;
+		std::getline(std::cin,input);
+		std::stringstream stream2(input);
+		stream2 >> numY;
+		int val = 0;
+		std::getline(std::cin,input);
+		std::stringstream stream3(input);
+		stream3 >> val;
+		b.update(numX,numY,val);
+		printBoard(b);
+		if (b.solved()) break;
+	}
 	
 }
