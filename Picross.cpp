@@ -45,7 +45,7 @@ void printBoard(Board b){
 		std::cout << std::string((max2+b.sideClues[i].size()-1),' ');
 		for (int j=0; j<b.topClues.size(); j++){
 			if (i+b.topClues[j].size()>=max1){
-				std::cout << ' ' << std::setw(3) << b.topClues[j][b.topClues[j].size()+i-max1];
+				std::cout << ' ' << std::setw(2) << b.topClues[j][b.topClues[j].size()+i-max1] << ' ';
 			}
 			else{
 				std::cout << "    ";
@@ -81,11 +81,18 @@ void printBoard(Board b){
 	std::cout << top << std::endl;
 }
 
-
+int getInputNumber(){
+	std::string input;
+	int temp = 0;
+	std::getline(std::cin,input);
+	std::stringstream stream(input);
+	stream >> temp;
+	return temp;
+}
 
 int main(){
 	std::string line;
-	std::ifstream myfile("test.txt");
+	std::ifstream myfile("test2.txt");
 	std::vector<std::vector<int> > board;
 	std::vector<std::vector<int> > clue1;
 	std::vector<std::vector<int> > clue2;
@@ -130,9 +137,13 @@ int main(){
 	//std::cout << clue1.size() << " " << clue2.size() << std::endl;
 	Board b(board,clue1,clue2);
 	printBoard(b);
+	int Character = 1;
 	while (true){
 		std::string input = "";
-		std::cout << "Enter x, then y, then value (0, 1, or 2)" << std::endl;
+		//should make what it wants -> coordinates
+		std::cout << "Enter c to change, l to fill a line, b to fill a single box" << std::endl;
+		std::cout << "Current: " << Character << std::endl;
+		/*std::cout << "Enter x, then y, then value 0-empty, 1-fill box, 2-X box, 3-fill line, 4-X line, 9-Clear Board)" << std::endl;
 		int numX = 0;
 		std::getline(std::cin,input);
 		std::stringstream stream1(input);
@@ -146,8 +157,40 @@ int main(){
 		std::stringstream stream3(input);
 		stream3 >> val;
 		b.update(numX,numY,val);
+		*/
+		std::getline(std::cin,input);
+		if (input == "c"){
+			std::cout << "Enter 0 to change to clear" << std::endl;
+			std::cout << "Enter 1 to change to fill" << std::endl;
+			std::cout << "Enter 2 to change to X" << std::endl;
+			int num = getInputNumber();
+			if (num!=1 && num!=2 && num!=3){
+				std::cout << "Error: Unknown Input: " << num << std::endl;
+				continue;
+			}
+			Character = num;
+		}
+		else if (input == "l") {
+			std::cout << "Enter the x, then y of the first square" << std::endl;
+			int x1 = getInputNumber();
+			int y1 = getInputNumber();
+			std::cout << "Enter the x, then y of the second square" << std::endl;
+			int x2 = getInputNumber();
+			int y2 = getInputNumber();
+			b.updateLine(x1,y1,x2,y2,Character);
+			//DRAW LINE
+		}
+		else if (input == "b") {
+			std::cout << "Enter the x, then the y of the square" << std::endl;
+			int x = getInputNumber();
+			int y = getInputNumber();
+			b.update(x,y,Character);
+		}
+		else {
+			std::cout << "Error: Unknown Input" << std::endl;
+		}
 		printBoard(b);
 		if (b.solved()) break;
 	}
-	
+	std::cout << "You have won!" << std::endl;
 }

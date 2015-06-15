@@ -21,6 +21,47 @@ class Board{
 		sideClues = Clues2;
 	}
 	
+	bool updateLine(int x1, int y1, int x2, int y2, int val){
+		/*
+		x1--;
+		y1--;
+		x2--;
+		y2--;
+		*/
+		if (x1==x2){
+			if (y1>y2){
+				return updateLineCol(x2,y2,x1,y1,val);
+			}
+			else{
+				return updateLineCol(x1,y1,x2,y2,val);
+			}
+		}
+		else{
+			if (x1>x2){
+				return updateLineRow(x2,y2,x1,y1,val);
+			}
+			else {
+				return updateLineRow(x1,y1,x2,y2,val);
+			}
+		}
+	}
+	
+	bool updateLineCol(int x1, int y1, int x2, int y2, int val) {
+		bool success = true;
+		for (int i=y1; i<=y2; i++){
+			success = update(x1,i,val) && success;
+		}
+		return success;
+	}
+	
+	bool updateLineRow(int x1, int y1, int x2, int y2, int val) {
+		bool success = true;
+		for (int i=x1; i<=x2; i++){
+			success = update(i,y1,val) && success;
+		}
+		return success;
+	}
+	
 	bool update(int x, int y, int value){
 		x--;
 		y--;
@@ -44,11 +85,11 @@ class Board{
 				count = 0;
 			}
 			if (topClues[x][cluenum]==count) {
+				cluenum++;
 				if (cluenum == topClues[x].size()){
 					topComplete[x] = true;
 					return;
 				}
-				cluenum++;
 				count = 0;
 			}
 		}
@@ -66,11 +107,11 @@ class Board{
 				count = 0;
 			}
 			if (sideClues[y][cluenum]==count) {
+				cluenum++;
 				if (cluenum == sideClues[y].size()){
 					sideComplete[y] = true;
 					return;
 				}
-				cluenum++;
 				count = 0;
 			}
 		}
